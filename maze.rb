@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Maze
   attr_reader :maze
   
@@ -9,7 +11,6 @@ class Maze
     @moves_hash = Hash.new
     @distance_hash = Hash.new
     @moves = [method(:move_up),method(:move_right),method(:move_down),method(:move_left)]
-    @allpossiblemoves = allpossiblemoves
   end
   
   def update_moves_hash(parent)
@@ -23,25 +24,19 @@ class Maze
   
   def fill_moves_hash
     count = 0
-    until @allpossiblemoves.count+1 == @moves_hash.keys.count
+    until @distance_hash.include? @end_position
       @moves_hash.values.each do |y| 
         y.each {|x| update_moves_hash(x) if !@moves_hash.keys.include? y}
         y.each {|x| update_distance(x,count) }
       end
-    count += 1
+      count += 1
+      p count
+      p @distance_hash
     end
   end
   
   def update_distance(pos,count)
     @distance_hash[pos] = count if @distance_hash[pos] == nil
-  end
-  
-  def allpossiblemoves
-    list = Array.new
-    @maze.each_index do |x|
-     @maze[x].each_index { |y| list << [x,y] if @maze[x][y] == " " }
-    end
-    list
   end
   
   def [](pos)
@@ -101,7 +96,7 @@ class Maze
   end
   
   def find_shortest(arr)
-    distance = 999
+    distance = 9999
     move = Array.new
     arr.each {|x| move,distance = x, @distance_hash[x] if @distance_hash[x] < distance}
     move
@@ -137,6 +132,7 @@ maze = Array.new
 input.split("\n").each do |x|
   maze << x.split("")
 end
+
 
 if __FILE__ == $PROGRAM_NAME
   newgame = Maze.new(maze)
