@@ -30,8 +30,6 @@ class Maze
         y.each {|x| update_distance(x,count) }
       end
       count += 1
-      p count
-      p @distance_hash
     end
   end
   
