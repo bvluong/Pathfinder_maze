@@ -106,12 +106,6 @@ class Maze
     arr.each {|x| move,distance = x, @distance_hash[x] if @distance_hash[x] < distance}
     move
   end
-  
-  def find_next_to_end(pos)
-    @moves.each do |x|
-      return x.call(pos) if possible_move?(x.call(pos))
-    end
-  end
 
   def find_move(parent)
     moves= Array.new
